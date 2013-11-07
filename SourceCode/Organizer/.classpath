@@ -2,5 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_api"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_gdata"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_http"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_oauth"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
