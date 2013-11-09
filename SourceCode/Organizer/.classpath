@@ -3,8 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_api"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_gdata"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_http"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_oauth"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jersey17"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_gdata">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/libs/Google/gdata-samples.java-1.47.1"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
