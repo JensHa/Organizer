@@ -148,7 +148,6 @@ public class GetCredential extends JFrame {
 				}
 				res=null;
 				resp=null;
-				System.out.println("test");
 				
 				
 			}
