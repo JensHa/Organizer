@@ -2,6 +2,7 @@ package de.server.resource;
 
 import java.net.URI;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +32,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.gdata.client.contacts.ContactsService;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
+import com.google.gson.JsonArray;
 import com.sun.xml.internal.bind.v2.TODO;
 
-import de.oauth.AuthHelper;
-import de.oauth.Properties;
+import de.server.oauth.AuthHelper;
+import de.server.oauth.ServerAuthProperties;
 
 
 
@@ -47,7 +49,7 @@ public class SecurityResource {
 	@Context
 	UriInfo uriInfo;
 	AuthHelper authHelper=new AuthHelper();
-	Object[] credentialsRow=new Object[4];
+	Object[] credentialsRow=new Object[5];
 	static ArrayList<Object[]> userCredentials= new ArrayList<>();
 	
 
@@ -80,14 +82,14 @@ public class SecurityResource {
 			{
 				if(userCredentials.get(i)[0].equals(usernameAndPass.getString(0)))
 				{
-					userCredentials.get(i)[3]=authHelper.initCredential(usernameAndPass.getString(1));
+					userCredentials.get(i)[4]=authHelper.initCredential(usernameAndPass.getString(1));
 					pos=i;
 				}
 			}
 			
 			  //TODO: Bad solution... Better use JSON
-		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[3]);
-		      final GenericUrl url = new GenericUrl(Properties.USER_INFO_URL);
+		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[4]);
+		      final GenericUrl url = new GenericUrl(ServerAuthProperties.USER_INFO_URL);
 		      final HttpRequest userinfoRequest = requestFactory.buildGetRequest(url);
 		      userinfoRequest.getHeaders().setContentType("application/json");
 		      final String jsonIdentity = userinfoRequest.execute().parseAsString();
@@ -95,7 +97,7 @@ public class SecurityResource {
 		        
 		 
 			
-			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[3]).getExpirationTimeMilliseconds()>0)
+			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[4]).getExpirationTimeMilliseconds()>0)
 			{
 				validCred="true";
 			}
@@ -133,7 +135,7 @@ public class SecurityResource {
 					userExits="true";
 
 					//has he or she also a (valid) credential?
-					if(((Credential)userCredentials.get(i)[3])!=null)
+					if(((Credential)userCredentials.get(i)[4])!=null)
 					{
 						hasValidCredentials="true";
 					}
@@ -181,8 +183,10 @@ public class SecurityResource {
 			credentialsRow[1]=userData.getString(1);
 			//Email
 			credentialsRow[2]=null;
-			//Credentials
+			//SessionID
 			credentialsRow[3]=null;
+			//Credentials
+			credentialsRow[4]=null;
 			
 			userCredentials.add(credentialsRow);
 			userCreated="true";
@@ -192,6 +196,32 @@ public class SecurityResource {
 		
 		Response response = Response.ok(userCreated).build();
 		return response;
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/SetSessionID")
+	public Response setASessionID(JSONArray nameAndID)
+	{
+		try
+		{
+			for(int i=0;i<userCredentials.size();i++)
+			{
+				if(nameAndID.getString(0).equals(userCredentials.get(i)[0]))
+				{
+				    SecureRandom sr1 = new SecureRandom();
+				    userCredentials.get(i)[3]=nameAndID.getString(1)+"/"+sr1.nextInt();
+				    
+					Response response = Response.ok(userCredentials.get(i)[3]).build();
+					return response;
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 //	@POST

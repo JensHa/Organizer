@@ -1,4 +1,4 @@
-package de.oauth;
+package de.server.oauth;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
@@ -21,7 +21,7 @@ public class AuthHelper {
     public AuthHelper()
     {
     	flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
-                JSON_FACTORY, Properties.CLIENT_ID, Properties.CLIENT_SECRET, Properties.SCOPE).build();
+                JSON_FACTORY, ServerAuthProperties.CLIENT_ID, ServerAuthProperties.CLIENT_SECRET, ServerAuthProperties.SCOPE).build();
     }
 	
 	public GoogleAuthorizationCodeFlow getFlow()
@@ -36,7 +36,7 @@ public class AuthHelper {
 
 		try
 		{
-		  final GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(Properties.CALLBACK_URI).execute();
+		  final GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(ServerAuthProperties.CALLBACK_URI).execute();
            credential = flow.createAndStoreCredential(response, null);
           return credential;
 		}catch(Exception e)
@@ -52,7 +52,7 @@ public class AuthHelper {
 	public GoogleAuthorizationCodeRequestUrl getAuthURL()
 	{
 		GoogleAuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
-		authorizationUrl.setRedirectUri(Properties.CALLBACK_URI);
+		authorizationUrl.setRedirectUri(ServerAuthProperties.CALLBACK_URI);
 		
 		return authorizationUrl;
 	}

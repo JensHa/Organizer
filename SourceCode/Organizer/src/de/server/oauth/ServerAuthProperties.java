@@ -1,9 +1,9 @@
-package de.oauth;
+package de.server.oauth;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class Properties {
+public class ServerAuthProperties {
 	
 	/**
 	 * This ID identifies the application. It is set up at https://code.google.com/apis/console/ 

@@ -1,4 +1,4 @@
-package de.gui;
+package de.client.gui;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -19,9 +19,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
+
+import de.client.ClientAuthProperties;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.net.URI;
+import java.security.SecureRandom;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
@@ -43,8 +47,8 @@ public class Login extends JFrame {
 	private static Login frame;
 	
 	private Client client;
-	private String serverURI="http://localhost/";
-	private int port=8080;
+	private String serverURI=ClientAuthProperties.ServerURI;
+	private int port=ClientAuthProperties.ServerPort;
 	private UriBuilder builder;
 	private URI uri;
 	private WebResource res;
@@ -141,7 +145,22 @@ public class Login extends JFrame {
 					break;
 				
 				case "true;true":
-					lblNewLabel.setText("Everything fine!");
+					
+					res=client.resource(uri).path("Security").path("SetSessionID");
+					
+				    JSONArray usernameAndID = new JSONArray();
+				    usernameAndID.put(textField.getText());
+				    SecureRandom sr1 = new SecureRandom();
+				    usernameAndID.put(sr1.nextInt());
+				    
+					resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
+					String sessionID=resp.getEntity(String.class);
+		
+					//TODO: Another method? To close it complete
+					setVisible(false);
+					
+					Overview overview=new Overview(textField.getText(),sessionID);
+					overview.setVisible(true);
 					break;
 
 				default:
@@ -150,8 +169,7 @@ public class Login extends JFrame {
 			
 
 				
-				res=null;
-				resp=null;
+
 				
 
 				
@@ -160,6 +178,7 @@ public class Login extends JFrame {
 						"Cant connect to server",
 					    "Error",
 					    JOptionPane.ERROR_MESSAGE);}}
+			
 		});
 		btnLogin.setBounds(10, 104, 127, 23);
 		contentPane.add(btnLogin);

@@ -1,4 +1,4 @@
-package de.gui;
+package de.client.gui;
 
 import java.awt.Desktop;
 import java.awt.EventQueue;
@@ -28,7 +28,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import de.oauth.AuthHelper;
+import de.server.oauth.AuthHelper;
 
 public class GetCredential extends JFrame {
 
