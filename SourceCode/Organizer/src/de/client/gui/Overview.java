@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 
 import de.client.ClientAuthProperties;
+import de.client.gui.calendar.CalendarGui;
 import de.client.gui.contacts.Contact;
 import de.server.oauth.AuthHelper;
 import de.server.resource.SecurityResource;
@@ -79,6 +80,9 @@ public class Overview extends JFrame {
 		tabbedPane.addTab("Contacts", contact);
 		contact.setLayout(null);
 		tabbedPane.addTab("test1", new JPanel());
+		//Add the Calendar tabb
+		JPanel calendar = CalendarGui.createPanel(username, sessionID);
+		tabbedPane.addTab("Calendar", calendar);
 
 		contentPane.add(tabbedPane);
 		
