@@ -47,7 +47,7 @@ public class Overview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Overview(String username,String sessionID) {
+	public Overview(String username,String password) {
 
 		
 		client = Client.create();
@@ -74,7 +74,7 @@ public class Overview extends JFrame {
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 51, 434, 210);
-		tabbedPane.addTab("Contacts", new ContactGUI(username,sessionID,client,uri));
+		tabbedPane.addTab("Contacts", new ContactGUI(username,password,client,uri));
 		tabbedPane.addTab("test", new JPanel());
 		//Add the Calendar tabb
 //		JPanel calendar = CalendarGui.createPanel(username, sessionID);
@@ -86,7 +86,7 @@ public class Overview extends JFrame {
 		
 	    JSONArray usernameAndID = new JSONArray();
 	    usernameAndID.put(username);
-	    usernameAndID.put(sessionID);
+	    usernameAndID.put(password);
 	    
 	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
 		String userMail=resp.getEntity(String.class);

@@ -38,7 +38,7 @@ public class ContactResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/GetContactXML")
-	public Response getContactsXML(JSONArray nameAndID)
+	public Response getContactsXML(JSONArray nameAndPass)
 	{
 		System.out.println("##Server##: User tries to get contacts in XML");
 		ContactFeed resultFeed;
@@ -48,11 +48,11 @@ public class ContactResource {
 		for(int i=0;i<userCredentials.size();i++)
 		{
 			
-			if(nameAndID.getString(0).equals(userCredentials.get(i)[0])&&nameAndID.getString(1).equals(userCredentials.get(i)[3]))
+			if(nameAndPass.getString(0).equals(userCredentials.get(i)[0])&&nameAndPass.getString(1).equals(userCredentials.get(i)[1]))
 			{
 
 				ContactsService conserv= new ContactsService("Project Default Service Account");
-	            conserv.setOAuth2Credentials((Credential) userCredentials.get(i)[4]);
+	            conserv.setOAuth2Credentials((Credential) userCredentials.get(i)[3]);
 	            URL feedUrl = new URL("https://www.google.com/m8/feeds/contacts/"+userCredentials.get(i)[2]+"/full");
 	            resultFeed = conserv.getFeed(feedUrl, ContactFeed.class);
 	            
@@ -79,7 +79,7 @@ public class ContactResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/GetContactJSON")
-	public Response getContactsJSON(JSONArray nameAndID)
+	public Response getContactsJSON(JSONArray nameAndPass)
 	{
 		System.out.println("##Server##: User tries to get contacts in JSON");
 		ContactFeed resultFeed;
@@ -89,11 +89,11 @@ public class ContactResource {
 		for(int i=0;i<userCredentials.size();i++)
 		{
 			
-			if(nameAndID.getString(0).equals(userCredentials.get(i)[0])&&nameAndID.getString(1).equals(userCredentials.get(i)[3]))
+			if(nameAndPass.getString(0).equals(userCredentials.get(i)[0])&&nameAndPass.getString(1).equals(userCredentials.get(i)[1]))
 			{
 
 				ContactsService conserv= new ContactsService("Project Default Service Account");
-	            conserv.setOAuth2Credentials((Credential) userCredentials.get(i)[4]);
+	            conserv.setOAuth2Credentials((Credential) userCredentials.get(i)[3]);
 	            URL feedUrl = new URL("https://www.google.com/m8/feeds/contacts/"+userCredentials.get(i)[2]+"/full");
 	            resultFeed = conserv.getFeed(feedUrl, ContactFeed.class);
 	            

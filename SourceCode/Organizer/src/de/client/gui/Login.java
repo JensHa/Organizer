@@ -146,20 +146,20 @@ public class Login extends JFrame {
 				
 				case "true;true":
 					
-					res=client.resource(uri).path("Security").path("SetSessionID");
-					
-				    JSONArray usernameAndID = new JSONArray();
-				    usernameAndID.put(textField.getText());
-				    SecureRandom sr1 = new SecureRandom();
-				    usernameAndID.put(sr1.nextInt());
-				    
-					resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
-					String sessionID=resp.getEntity(String.class);
+//					res=client.resource(uri).path("Security").path("SetSessionID");
+//					
+//				    JSONArray usernameAndID = new JSONArray();
+//				    usernameAndID.put(textField.getText());
+//				    SecureRandom sr1 = new SecureRandom();
+//				    usernameAndID.put(sr1.nextInt());
+//				    
+//					resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
+//					String sessionID=resp.getEntity(String.class);
 		
 					//TODO: Another method? To close it complete
 					setVisible(false);
 					
-					Overview overview=new Overview(textField.getText(),sessionID);
+					Overview overview=new Overview(textField.getText(),new String(passwordField.getPassword()));
 					overview.setVisible(true);
 					break;
 

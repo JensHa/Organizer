@@ -67,13 +67,13 @@ public class SecurityResource {
 			{
 				if(userCredentials.get(i)[0].equals(usernameAndPass.getString(0)))
 				{
-					userCredentials.get(i)[4]=authHelper.initCredential(usernameAndPass.getString(1));
+					userCredentials.get(i)[3]=authHelper.initCredential(usernameAndPass.getString(1));
 					pos=i;
 				}
 			}
 			
 			  //TODO: Bad solution... Better use JSON
-		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[4]);
+		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[3]);
 		      final GenericUrl url = new GenericUrl(ServerAuthProperties.USER_INFO_URL);
 		      final HttpRequest userinfoRequest = requestFactory.buildGetRequest(url);
 		      userinfoRequest.getHeaders().setContentType("application/json");
@@ -87,7 +87,7 @@ public class SecurityResource {
 		        
 		 
 			
-			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[4]).getExpirationTimeMilliseconds()>0)
+			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[3]).getExpirationTimeMilliseconds()>0)
 			{
 				validCred="true";
 			}
@@ -125,7 +125,7 @@ public class SecurityResource {
 					userExits="true";
 
 					//has he or she also a (valid) credential?
-					if(((Credential)userCredentials.get(i)[4])!=null)
+					if(((Credential)userCredentials.get(i)[3])!=null)
 					{
 						hasValidCredentials="true";
 					}
@@ -173,10 +173,9 @@ public class SecurityResource {
 			credentialsRow[1]=userData.getString(1);
 			//Email
 			credentialsRow[2]=null;
-			//SessionID
-			credentialsRow[3]=null;
 			//Credentials
-			credentialsRow[4]=null;
+			credentialsRow[3]=null;
+
 			
 			userCredentials.add(credentialsRow);
 			userCreated="true";

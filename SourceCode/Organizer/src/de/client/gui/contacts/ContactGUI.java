@@ -37,7 +37,7 @@ public class ContactGUI extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public ContactGUI(String username, String sessionID, Client client, URI uri) {
+	public ContactGUI(String username, String pass, Client client, URI uri) {
 		setLayout(new BorderLayout(0, 0));
 		DefaultTableModel model = new DefaultTableModel(); 
 		table = new JTable(model); 
@@ -56,11 +56,11 @@ public class ContactGUI extends JPanel {
 		WebResource res=client.resource(uri).path("Contact").path("GetContactJSON");
 		
 		
-	    JSONArray usernameAndID = new JSONArray();
-	    usernameAndID.put(username);
-	    usernameAndID.put(sessionID);
+	    JSONArray nameAndPass = new JSONArray();
+	    nameAndPass.put(username);
+	    nameAndPass.put(pass);
 	    
-	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
+	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,nameAndPass);
 		JSONObject userContactsInJSON = resp.getEntity(JSONObject.class);
 		try {
 			System.out.println(userContactsInJSON.toString(4));
