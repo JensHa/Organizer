@@ -51,7 +51,7 @@ public class UserInfoResource {
 	
 	/**
 	 * An arraylist that contains one array for every user.
-	 * the array for every user contains name, password, ID and credential in that order.
+	 * The array for every user contains name, password, email, SessionID and credential in that order.
 	 */
 	ArrayList<Object[]> userCredentials=SecurityResource.userCredentials;
 	
@@ -67,6 +67,7 @@ public class UserInfoResource {
 		
 		for(int i=0;i<userCredentials.size();i++)
 		{
+			
 			if(nameAndID.getString(0).equals(userCredentials.get(i)[0])&&nameAndID.getString(1).equals(userCredentials.get(i)[3]))
 			{
 				Response response = Response.ok(userCredentials.get(i)[2]).build();
