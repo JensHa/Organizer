@@ -15,7 +15,14 @@ import org.json.XML;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.contacts.ContactsService;
+import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
+import com.google.gdata.data.contacts.GroupMembershipInfo;
+import com.google.gdata.data.extensions.Email;
+import com.google.gdata.data.extensions.FamilyName;
+import com.google.gdata.data.extensions.GivenName;
+import com.google.gdata.data.extensions.Name;
+import com.google.gdata.data.extensions.PhoneNumber;
 import com.google.gdata.util.common.xml.XmlWriter;
 
 
@@ -133,34 +140,69 @@ public class ContactResource {
 	}
 	
 	
-    
-//    de.server.entities.contacts.ContactFeed resultFeedOwn= new de.server.entities.contacts.ContactFeed();
-//    
-//    for(int i1 =0; i1<resultFeed.getEntries().size();i1++)
-//    {
-//    	Contact con=new Contact();
-//    	con.setTitle(resultFeed.getEntries().get(i1).getTitle().getPlainText());
-//    	con.setFirstName(resultFeed.getEntries().get(i1).getName().getGivenName().getValue());
-//    	con.setLastName(resultFeed.getEntries().get(i1).getName().getFamilyName().getValue());
-////    	con.setPhoneNumber(resultFeed.getEntries().get(i1).getPhoneNumbers().get(0).getPhoneNumber());
-////    	con.seteMail(resultFeed.getEntries().get(i1).getEmailAddresses().get(0).getAddress());
-//    	resultFeedOwn.addContact(con);
-//    }
-//	JAXBContext jaxbContext = JAXBContext.newInstance(de.server.entities.contacts.ContactFeed.class);
-//	Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//
-//	// output pretty printed
-//	jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//	jaxbMarshaller.marshal(resultFeedOwn, System.out);
-	
-	
-//    
-//    for (ContactEntry entry : resultFeed.getEntries()) 
-//    {
-//   	 System.out.println(entry.getName().getFullName().getValue());
-//    }
-//    
-//    System.out.println(resultFeed.getTitle().getPlainText());
-//    System.out.println(resultFeed.getEntries().size());
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/CreateContactJSON")
+	public Response CreateContactsJSON(JSONObject usernamePassAndContact)
+	{
+		System.out.println("##Server##: User tries to create a contact in JSON");
+
+		Response response=null;
+
+		try{
+			for(int i=0; i<userCredentials.size();i++)
+			{
+				if(usernamePassAndContact.get("username").equals(userCredentials.get(i)[0])&&usernamePassAndContact.get("password").equals(userCredentials.get(i)[1]))
+				{
+					
+						  ContactEntry contact = new ContactEntry();
+						  Name name = new Name();
+						  if(!usernamePassAndContact.getString("givenName").equals(""))
+						  {
+						  name.setGivenName(new GivenName(usernamePassAndContact.getString("givenName"), null));
+						  contact.setName(name);
+						  }
+						  if(!usernamePassAndContact.getString("familyName").equals(""))
+						  {
+						  name.setFamilyName(new FamilyName(usernamePassAndContact.getString("familyName"), null));
+						  contact.setName(name);
+						  }
+						  
+						  
+						  Email primaryMail = new Email();
+						  if(!usernamePassAndContact.getString("email").equals(""))
+						  {
+						  primaryMail.setAddress(usernamePassAndContact.getString("email"));
+						  primaryMail.setRel("http://schemas.google.com/g/2005#home");
+						  contact.addEmailAddress(primaryMail);
+
+						  }
+			
+						  GroupMembershipInfo groupMembershipInfo = new GroupMembershipInfo();
+						  groupMembershipInfo.setHref("http://www.google.com/m8/feeds/groups/jenshaussmanndeveloper@gmail.com/base/6");
+						  contact.addGroupMembershipInfo(groupMembershipInfo);
+						  
+						  PhoneNumber primaryPhoneNumber = new PhoneNumber();
+						  if(!usernamePassAndContact.getString("phone").equals(""))
+						  {
+						  primaryPhoneNumber.setPhoneNumber(usernamePassAndContact.getString("phone"));
+						  primaryPhoneNumber.setRel("http://schemas.google.com/g/2005#home");
+						  contact.addPhoneNumber(primaryPhoneNumber);
+
+						  }
+						  
+						  URL postUrl = new URL("https://www.google.com/m8/feeds/contacts/jenshaussmanndeveloper@gmail.com/full");
+						  ContactsService conserv= new ContactsService("Project Default Service Account");
+				            conserv.setOAuth2Credentials((Credential) userCredentials.get(0)[3]);
+			
+						  ContactEntry createdContact = conserv.insert(postUrl, contact);
+			
+			
+			
+				
+				}
+			}
+		}catch(Exception e){e.printStackTrace();}
+		return response;
+	}
 }

@@ -56,7 +56,7 @@ public class Overview extends JFrame {
 		uri = builder.build();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 470, 321);
 		contentPane = new JPanel();
 		contentPane.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -73,7 +73,7 @@ public class Overview extends JFrame {
 		contentPane.setLayout(null);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 51, 434, 210);
+		tabbedPane.setBounds(0, 51, 455, 231);
 		tabbedPane.addTab("Contacts", new ContactGUI(username,password,client,uri));
 		tabbedPane.addTab("test", new JPanel());
 		//Add the Calendar tabb
