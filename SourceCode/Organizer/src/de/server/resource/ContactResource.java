@@ -335,7 +335,6 @@ public class ContactResource {
 							  entryToUpdate.getEmailAddresses().get(0).setAddress(usernamePassIDContact.getString("email"));
 						  }else
 						  {
-							  //entryToUpdate.getEmailAddresses().remove(0);
 							  entryToUpdate.getEmailAddresses().clear();
 							  
 						  }
@@ -358,7 +357,7 @@ public class ContactResource {
 							  entryToUpdate.getPhoneNumbers().get(0).setPhoneNumber(usernamePassIDContact.getString("phone"));
 						  }else
 						  {
-							  entryToUpdate.getPhoneNumbers().remove(0);
+							  entryToUpdate.getPhoneNumbers().clear();
 						  }
 					  }else
 					  {
