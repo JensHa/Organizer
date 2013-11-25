@@ -24,6 +24,9 @@ public class UserContacts {
 	    	Contact con=new Contact();
 	    	
 	    	JSONObject OneEntry= (JSONObject) AllPeople.get(i);
+	    	
+	    	//Set the Google-ID of the contact
+	    	con.setId(OneEntry.getString("atom:id"));
 	    
 	    	//Set the name for one contact
 	    	if(!OneEntry.isNull("gd:name"))

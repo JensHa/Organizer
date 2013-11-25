@@ -1,34 +1,24 @@
 package de.client.gui.contacts;
 
 import java.net.URI;
-import java.net.URL;
-import java.util.List;
-
 import javax.swing.JPanel;
-import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
-import com.google.gdata.client.contacts.ContactsService;
-import com.google.gdata.data.contacts.ContactEntry;
-import com.google.gdata.data.contacts.ContactFeed;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import de.client.contacts.UserContacts;
-import de.server.oauth.AuthHelper;
-import java.awt.BorderLayout;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import javax.swing.BoxLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.Font;
@@ -38,10 +28,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ContactGUI extends JPanel {
-	private JEditorPane editorPane;
-	private JEditorPane dtrpnEins;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
-	JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_1;
 	private JLabel lblCreateANew;
 	private JLabel lblGivenName;
 	private JLabel lblFamilyName;
@@ -51,9 +43,12 @@ public class ContactGUI extends JPanel {
 	private JTextField tfEmail;
 	private JTextField tfPhone;
 	private JLabel lblPhone;
-	private JButton btnSubmit;
-	private JButton btnClear;
+	private JButton btnCreate;
+	private JButton btnDelete;
 	private JPanel panel;
+	private JButton btnRefresh;
+	private UserContacts userContacts;
+	private JButton btnEdit;
 
 	/**
 	 * Create the panel.
@@ -71,14 +66,7 @@ public class ContactGUI extends JPanel {
 				System.out.println(scrollPane_1.getSize().height);
 			}
 		});
-		DefaultTableModel model = new DefaultTableModel(); 
-		table = new JTable(model); 
-
-		// Create a couple of columns 
-		model.addColumn("Given Name"); 
-		model.addColumn("Family Name"); 
-		model.addColumn("E-Mail");
-		model.addColumn("Phone");
+		
 		setLayout(null);
 		 
 		 panel = new JPanel();
@@ -86,8 +74,8 @@ public class ContactGUI extends JPanel {
 		 add(panel);
 		 panel.setLayout(null);
 		 
-		 lblCreateANew = new JLabel("Create a new contact");
-		 lblCreateANew.setBounds(10, 11, 141, 16);
+		 lblCreateANew = new JLabel("Create/ Edit/ Delete a contact");
+		 lblCreateANew.setBounds(10, 11, 246, 16);
 		 panel.add(lblCreateANew);
 		 lblCreateANew.setFont(new Font("Tahoma", Font.BOLD, 13));
 		 
@@ -99,8 +87,8 @@ public class ContactGUI extends JPanel {
 		 lblFamilyName.setBounds(10, 63, 83, 14);
 		 panel.add(lblFamilyName);
 		 
-		 btnSubmit = new JButton("Submit");
-		 btnSubmit.addActionListener(new ActionListener() {
+		 btnCreate = new JButton("Create");
+		 btnCreate.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
 		 		
 		 		JSONObject usernamePassAndContact=new JSONObject();
@@ -119,10 +107,14 @@ public class ContactGUI extends JPanel {
 				    
 				} catch (JSONException e1) {e1.printStackTrace();}
 		 		
+				refreshTable(username, pass, client, uri);
+				
+				clearAll();
+
 		 	}
 		 });
-		 btnSubmit.setBounds(92, 88, 146, 23);
-		 panel.add(btnSubmit);
+		 btnCreate.setBounds(10, 88, 101, 23);
+		 panel.add(btnCreate);
 		 
 		 tfGivenName = new JTextField();
 		 tfGivenName.setBounds(92, 38, 146, 20);
@@ -152,19 +144,130 @@ public class ContactGUI extends JPanel {
 		 panel.add(tfEmail);
 		 tfEmail.setColumns(10);
 		 
-		 btnClear = new JButton("Clear");
-		 btnClear.setBounds(294, 88, 146, 23);
-		 panel.add(btnClear);
-		 btnClear.addActionListener(new ActionListener() {
+		 btnDelete = new JButton("Delete");
+		 btnDelete.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
+		 		
+		 		if(table.getSelectedRow()>-1)
+		 		{
+		 		JSONObject usernamePassAndID=new JSONObject();
+		 		try {
+		 			usernamePassAndID.put("username", username);
+		 			usernamePassAndID.put("password", pass);
+		 			usernamePassAndID.put("id", userContacts.getUserContacts().get(table.getSelectedRow()).getId());
+
+
+					WebResource res=client.resource(uri).path("Contact").path("DeleteContactJSON");
+
+				    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernamePassAndID);
+				    System.out.println(resp.getStatus());
+				    
+				} catch (JSONException e1) {e1.printStackTrace();}
+		 		
+				refreshTable(username, pass, client, uri);
+				clearAll();
+		 		}
 		 	}
 		 });
-		 scrollPane_1 = new JScrollPane( table );
+		 btnDelete.setBounds(230, 88, 101, 23);
+	 	 btnDelete.setEnabled(false);
+		 panel.add(btnDelete);
+		 
+		 
+		 btnRefresh = new JButton("Refresh");
+		 btnRefresh.setBounds(339, 88, 101, 23);
+		 btnRefresh.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+				refreshTable(username, pass, client, uri);
+		 	}
+		 });
+		 panel.add(btnRefresh);
+		 
+		 btnEdit = new JButton("Edit");
+		 btnEdit.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		
+		 		JSONObject usernamePassIDContact=new JSONObject();
+		 		try {
+		 			usernamePassIDContact.put("username", username);
+		 			usernamePassIDContact.put("password", pass);
+		 			usernamePassIDContact.put("id", userContacts.getUserContacts().get(table.getSelectedRow()).getId());
+		 			usernamePassIDContact.put("givenName", tfGivenName.getText());
+		 			usernamePassIDContact.put("familyName",tfFamilyName.getText());
+		 			usernamePassIDContact.put("email", tfEmail.getText());
+		 			usernamePassIDContact.put("phone", tfPhone.getText());
+
+
+
+
+					WebResource res=client.resource(uri).path("Contact").path("UpdateContactJSON");
+
+				    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernamePassIDContact);
+				    System.out.println(resp.getStatus());
+				    
+				} catch (JSONException e1) {e1.printStackTrace();}
+		 		
+				refreshTable(username, pass, client, uri);
+				clearAll();
+		 	}
+		 });
+		 btnEdit.setBounds(120, 88, 101, 23);
+ 		 btnEdit.setEnabled(false);
+		 panel.add(btnEdit);
+
+		table = new JTable(); 
+		refreshTable(username, pass, client, uri);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+            	
+            	//Needed because valueChanged "fires" two times => Mouse pressed AND released
+            	if(table.getSelectedRow()>-1)
+            	{
+            		btnDelete.setEnabled(true);
+            		btnEdit.setEnabled(true);
+
+	            	if (! e.getValueIsAdjusting())
+	            	{
+	                	System.out.println(table.getSelectedRow());
+	                	
+	                	tfGivenName.setText(userContacts.getUserContacts().get(table.getSelectedRow()).getGivenName());
+	                	tfFamilyName.setText(userContacts.getUserContacts().get(table.getSelectedRow()).getFamilyName());
+	                	tfEmail.setText(userContacts.getUserContacts().get(table.getSelectedRow()).getEmail());
+	                	tfPhone.setText(userContacts.getUserContacts().get(table.getSelectedRow()).getPhone());
+	
+	            	}
+            	}else
+            	{
+            		btnDelete.setEnabled(false);
+            		btnEdit.setEnabled(false);
+            	}
+            }
+        });
+		scrollPane_1 = new JScrollPane( table );
 		scrollPane_1.setBounds(0, 0, 450, 214);
 		add(scrollPane_1);
 
+
+
+
+	}
+	
+	public void refreshTable(String username, String pass, Client client, URI uri)
+	{
+	
+		DefaultTableModel model = new DefaultTableModel(); 
 		
 
+		// Create a couple of columns 
+		model.addColumn("Given Name"); 
+		model.addColumn("Family Name"); 
+		model.addColumn("E-Mail");
+		model.addColumn("Phone");
+		
 		WebResource res=client.resource(uri).path("Contact").path("GetContactJSON");
 		
 		
@@ -180,13 +283,24 @@ public class ContactGUI extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		UserContacts userContacts = new UserContacts(userContactsInJSON);
+		userContacts = new UserContacts(userContactsInJSON);
 		
 		for(int i=0;i<userContacts.getUserContacts().size();i++)
 		{
 			System.out.println("vorname: " + userContacts.getUserContacts().get(i).getGivenName() + " nachname: "+ userContacts.getUserContacts().get(i).getFamilyName() + " email: "+userContacts.getUserContacts().get(i).getEmail() + " phone: " + userContacts.getUserContacts().get(i).getPhone());
 			model.addRow(new Object[]{userContacts.getUserContacts().get(i).getGivenName(), userContacts.getUserContacts().get(i).getFamilyName(), userContacts.getUserContacts().get(i).getEmail(), userContacts.getUserContacts().get(i).getPhone()});
 		}
+	
+		table.setModel(model);
 
 	}
+
+	public void clearAll()
+	{
+		tfGivenName.setText("");
+		tfFamilyName.setText("");
+		tfEmail.setText("");
+		tfPhone.setText("");
+	}
 }
+

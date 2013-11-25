@@ -1,6 +1,7 @@
 package de.client.contacts;
 
 public class Contact {
+	private String id;
 	private String givenName;
 	private String familyName;
 	private String email;
@@ -8,6 +9,13 @@ public class Contact {
 	
 	
 	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getGivenName() {
 		return givenName;
 	}
