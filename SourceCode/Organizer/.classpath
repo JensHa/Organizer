@@ -2,12 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GoogleApi"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GoogleGData"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GoogleHttp"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GoogleOAuth"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jersey-1.17"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jetty-8.1.12"/>
-	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_api"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_gdata"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_http"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_oauth"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jersey17"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty8"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

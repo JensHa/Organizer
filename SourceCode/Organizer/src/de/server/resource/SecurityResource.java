@@ -1,11 +1,7 @@
 package de.server.resource;
 
-import java.net.URI;
-import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,28 +9,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBElement;
-
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
-import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.gdata.client.contacts.ContactsService;
-import com.google.gdata.data.contacts.ContactEntry;
-import com.google.gdata.data.contacts.ContactFeed;
-import com.google.gson.JsonArray;
-import com.sun.xml.internal.bind.v2.TODO;
-
 import de.server.oauth.AuthHelper;
 import de.server.oauth.ServerAuthProperties;
 
@@ -82,22 +67,27 @@ public class SecurityResource {
 			{
 				if(userCredentials.get(i)[0].equals(usernameAndPass.getString(0)))
 				{
-					userCredentials.get(i)[4]=authHelper.initCredential(usernameAndPass.getString(1));
+					userCredentials.get(i)[3]=authHelper.initCredential(usernameAndPass.getString(1));
 					pos=i;
 				}
 			}
 			
 			  //TODO: Bad solution... Better use JSON
-		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[4]);
+		      final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userCredentials.get(pos)[3]);
 		      final GenericUrl url = new GenericUrl(ServerAuthProperties.USER_INFO_URL);
 		      final HttpRequest userinfoRequest = requestFactory.buildGetRequest(url);
 		      userinfoRequest.getHeaders().setContentType("application/json");
 		      final String jsonIdentity = userinfoRequest.execute().parseAsString();
-		      userCredentials.get(pos)[2]=jsonIdentity.substring(jsonIdentity.indexOf("email")+9, jsonIdentity.indexOf("\"", jsonIdentity.indexOf("email")+10));
+		      final JSONObject todoJson = new JSONObject(jsonIdentity); 
+		      
+		      final String email = (String) todoJson.get("email");
+		      System.out.println(email);
+		      userCredentials.get(pos)[2]=email;
+		   //   userCredentials.get(pos)[2]=jsonIdentity.substring(jsonIdentity.indexOf("email")+9, jsonIdentity.indexOf("\"", jsonIdentity.indexOf("email")+10));
 		        
 		 
 			
-			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[4]).getExpirationTimeMilliseconds()>0)
+			if(((String)userCredentials.get(pos)[2]).contains("@")&&((Credential)userCredentials.get(pos)[3]).getExpirationTimeMilliseconds()>0)
 			{
 				validCred="true";
 			}
@@ -135,7 +125,7 @@ public class SecurityResource {
 					userExits="true";
 
 					//has he or she also a (valid) credential?
-					if(((Credential)userCredentials.get(i)[4])!=null)
+					if(((Credential)userCredentials.get(i)[3])!=null)
 					{
 						hasValidCredentials="true";
 					}
@@ -183,10 +173,9 @@ public class SecurityResource {
 			credentialsRow[1]=userData.getString(1);
 			//Email
 			credentialsRow[2]=null;
-			//SessionID
-			credentialsRow[3]=null;
 			//Credentials
-			credentialsRow[4]=null;
+			credentialsRow[3]=null;
+
 			
 			userCredentials.add(credentialsRow);
 			userCreated="true";
@@ -224,24 +213,5 @@ public class SecurityResource {
 		return null;
 	}
 	
-//	@POST
-//	@Consumes(MediaType.APPLICATION_XML)
-//	public Response postItemXML(JAXBElement<Item> jax,@Context HttpServletRequest request)
-//	{
-//		
-//		Item item = (Item)jax.getValue();
-//		
-//		inventorylist.getItemlist().add(item);
-//		
-//		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-//		URI uri = builder.path( ""+item.getId() ).build();
-//		Response response = Response.created(uri).build();
-//		System.out.println("in PostXML");
-//		System.out.println(inventorylist.getItemlist().size());
-//		for(int i=0;i<inventorylist.getItemlist().size();i++)
-//		{
-//			System.out.println(inventorylist.getItemlist().get(i).getId() + "; " + inventorylist.getItemlist().get(i).getDescription());
-//		}
-//		return response; 
-//	}
+
 }
