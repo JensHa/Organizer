@@ -12,6 +12,7 @@ import org.codehaus.jettison.json.JSONArray;
 
 import com.google.gdata.client.calendar.CalendarService;
 
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -34,6 +35,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
@@ -47,6 +49,7 @@ import com.google.gdata.data.calendar.CalendarEntry;
 import com.google.gdata.data.calendar.CalendarFeed;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
+import com.google.gdata.util.common.xml.XmlWriter;
 import com.google.gson.JsonArray;
 import com.sun.xml.internal.bind.v2.TODO;
 
@@ -81,7 +84,7 @@ public class CalendarResource {
 		for(int i=0;i<userCredentials.size();i++)
 		{	
 			Object[] userArray = userCredentials.get(i);
-			if(nameAndID.getString(0).equals(userArray[0])&&nameAndID.getString(1).equals(userArray[3]))
+			if(nameAndID.getString(0).equals(userArray[0])&&nameAndID.getString(1).equals(userArray[2]))
 			{	
 				
 				//using feed
@@ -141,6 +144,47 @@ public class CalendarResource {
 		return null;
 	}
 		
+	
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/GetCalendarNewTry")
+	public Response getContactsXML(JSONArray nameAndPass)
+	{
+		System.out.println("##Server##: User tries to get contacts in XML");
+		ContactFeed resultFeed;
+		Response response=null;
+		try
+		{
+		for(int i=0;i<userCredentials.size();i++)
+		{
+			
+			if(nameAndPass.getString(0).equals(userCredentials.get(i)[0])&&nameAndPass.getString(1).equals(userCredentials.get(i)[1]))
+			{
+
+				ContactsService conserv= new ContactsService("Project Default Service Account");
+	            conserv.setOAuth2Credentials((Credential) userCredentials.get(i)[3]);
+	            URL feedUrl = new URL(ServerAuthProperties.USER_PRIVATE_CALENDAR_URL );
+	            resultFeed = conserv.getFeed(feedUrl, ContactFeed.class);
+	            
+	            
+	            //make a XML file out of the ContactFeed (provided by google)
+	            StringWriter stringWriter = new StringWriter();
+	            String contactsInXML = "";
+	            XmlWriter xmlWriter = new XmlWriter(stringWriter, "UTF-8");
+	            resultFeed.generate(xmlWriter, conserv.getExtensionProfile());
+	            contactsInXML = stringWriter.toString();
+	            
+	            
+	            response = Response.ok(contactsInXML).build();
+	 
+			}
+		}
+		}catch(Exception e){e.printStackTrace();}
+		return response;
+		
+
+	}
 
 	/**
 	 * Gets the users calendar from google and returns it.
@@ -160,13 +204,17 @@ public class CalendarResource {
 		for(int i=0;i<userCredentials.size();i++)
 		{	
 			Object[] userArray = userCredentials.get(i);
-			if(nameAndID.getString(0).equals(userArray[0])&&nameAndID.getString(1).equals(userArray[3]))
+			if(nameAndID.getString(0).equals(userArray[0])&&nameAndID.getString(1).equals(userArray[1]))
 			{	
+//				System.out.println("USER FOUND");
+//				for(int i1=0; i1< userArray.length;i1++){
+//					System.out.println(i1 + " " + userArray[i1]);
+//				}
 				
 				//using feed
 				
 				//build the request with the users credentials
-			    final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userArray[4]);
+			    final HttpRequestFactory requestFactory =  new NetHttpTransport().createRequestFactory((Credential) userArray[3]);
 			    final GenericUrl url = new GenericUrl(ServerAuthProperties.USER_PRIVATE_CALENDAR_URL);
 			    final HttpRequest userinfoRequest = requestFactory.buildGetRequest(url);
 			    userinfoRequest.getHeaders().setContentType("application/json");

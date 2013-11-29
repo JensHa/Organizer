@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 
 import de.client.ClientAuthProperties;
+import de.client.gui.calendar.CalendarGui;
 import de.client.gui.contacts.ContactGUI;
 import java.awt.Font;
 
@@ -75,10 +76,10 @@ public class Overview extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 51, 455, 231);
 		tabbedPane.addTab("Contacts", new ContactGUI(username,password,client,uri));
-		tabbedPane.addTab("test", new JPanel());
-		//Add the Calendar tabb
-//		JPanel calendar = CalendarGui.createPanel(username, sessionID);
-//		tabbedPane.addTab("Calendar", calendar);
+//		tabbedPane.addTab("test", new JPanel());
+//		Add the Calendar tabb
+		JPanel calendar = CalendarGui.createPanel(username, password);
+		tabbedPane.addTab("Calendar", calendar);
 
 		contentPane.add(tabbedPane);
 		

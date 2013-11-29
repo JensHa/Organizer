@@ -1,4 +1,3 @@
-package de.client.gui.contacts;
 
 import java.net.URI;
 import javax.swing.JPanel;
@@ -103,7 +102,7 @@ public class ContactGUI extends JPanel {
 					WebResource res=client.resource(uri).path("Contact").path("CreateContactJSON");
 
 				    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernamePassAndContact);
-				    System.out.println(resp.getStatus());
+			//	    System.out.println(resp.getStatus());
 				    
 				} catch (JSONException e1) {e1.printStackTrace();}
 		 		
@@ -160,7 +159,7 @@ public class ContactGUI extends JPanel {
 					WebResource res=client.resource(uri).path("Contact").path("DeleteContactJSON");
 
 				    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernamePassAndID);
-				    System.out.println(resp.getStatus());
+			//	    System.out.println(resp.getStatus());
 				    
 				} catch (JSONException e1) {e1.printStackTrace();}
 		 		
@@ -203,7 +202,7 @@ public class ContactGUI extends JPanel {
 					WebResource res=client.resource(uri).path("Contact").path("UpdateContactJSON");
 
 				    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernamePassIDContact);
-				    System.out.println(resp.getStatus());
+			//	    System.out.println(resp.getStatus());
 				    
 				} catch (JSONException e1) {e1.printStackTrace();}
 		 		
@@ -278,7 +277,7 @@ public class ContactGUI extends JPanel {
 	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,nameAndPass);
 		JSONObject userContactsInJSON = resp.getEntity(JSONObject.class);
 		try {
-			System.out.println(userContactsInJSON.toString(4));
+	//		System.out.println(userContactsInJSON.toString(4));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

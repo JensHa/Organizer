@@ -24,7 +24,10 @@ public class ServerAuthProperties {
     
     public static final String USER_CALENDAR_URL = "http://www.google.com/calendar/feeds/default/allcalendars/full";
     
+    public static final String USER_PRIVATE_CALENDAR_URL = "https://www.google.com/calendar/feeds/default/private/full";
+    
     
 	
 
+    
 }

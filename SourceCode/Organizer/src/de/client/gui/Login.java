@@ -66,7 +66,7 @@ public class Login extends JFrame {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null,
 						    "Error",
-						    "Cant connect to servr",
+						    "Cant connect to servor",
 						    JOptionPane.ERROR_MESSAGE);
 				}
 			}

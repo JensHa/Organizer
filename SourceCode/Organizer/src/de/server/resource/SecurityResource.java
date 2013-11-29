@@ -142,7 +142,7 @@ public class SecurityResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/CreateUser")
-	public Response createANewUser(JSONArray userData)
+	public Response createANewUser(JSONArray userData) //input example: ["adrian","pw"]
 	{
 		
 		//TODO: Handle primative datatypes?
