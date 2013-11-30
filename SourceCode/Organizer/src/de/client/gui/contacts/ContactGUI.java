@@ -1,3 +1,5 @@
+package de.client.gui.contacts;
+
 
 import java.net.URI;
 import javax.swing.JPanel;
@@ -277,6 +279,7 @@ public class ContactGUI extends JPanel {
 	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,nameAndPass);
 		JSONObject userContactsInJSON = resp.getEntity(JSONObject.class);
 		try {
+			userContactsInJSON.toString(4);
 	//		System.out.println(userContactsInJSON.toString(4));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

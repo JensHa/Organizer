@@ -1,6 +1,7 @@
 package de.client.gui.calendar;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -38,9 +39,11 @@ public class CalendarGui{// extends JPanel {
 	 */
 	public static JPanel createPanel(String username,String pass){
 		
-		LinkedList<CalendarEntry> entrylist = new LinkedList<CalendarEntry>();
-		entrylist.add(new CalendarEntry(null, "blablala thats a description"));
-		panel = new CalendarPanel(entrylist);
+		ArrayList<CalendarEntry> entrylist = new ArrayList<CalendarEntry>();
+		
+		
+		entrylist.add(new CalendarEntry("2013-12-24T18:00:00.000+07:00", "blablala thats a description"));
+		
 		//Set up the client
 		client = Client.create();
 		client.getProperties().put(ClientConfig.PROPERTY_FOLLOW_REDIRECTS, true);
@@ -49,7 +52,7 @@ public class CalendarGui{// extends JPanel {
 		
 		//res=client.resource(uri).path("Userinfo").path("GetUsersGender"); GetCalendarNewTry
 		
-		//Get all available Calendars
+		//Get all user Calendar
 		res=client.resource(uri).path("Calendar").path("GetUsersCalendar");
 		
 		System.out.println("---------------------------");
@@ -62,31 +65,23 @@ public class CalendarGui{// extends JPanel {
 	    
 	    ClientResponse resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
 		String responsestring=resp.getEntity(String.class);
-	//	System.out.println("re1 " + responsestring);
 		
-		//Get private Calendar new try
-//		res=client.resource(uri).path("Calendar").path("GetCalendarNewTry");
-//	    resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
-//	    String privatexml = resp.getEntity(String.class);
-//	    System.out.println("re2 " + privatexml);
-
+		//Json is easier to parse
         org.json.JSONObject calendJson = XML.toJSONObject(responsestring);
-        org.json.JSONArray entries = calendJson.getJSONArray("entry");
         
-        Object entry = entries.get(0);
-        if(entry != null)
-        	System.out.println(entry.toString());
-        else
-        	System.out.println("entry is null");
+        //ged an object out of the feed, that also gives access to the entries
+        GoogleCalendarEntryFeed feed = new GoogleCalendarEntryFeed(calendJson);
+     //   String jsonCalendar = calendJson.toString(4);
         
-        String jsonCalendar = calendJson.toString(4);
-        
-        System.out.println("json" + jsonCalendar);
+        entrylist=feed.getEntries();
+//        System.out.println("json" + jsonCalendar);
 	    
 		//System.out.println("resp " + responsestring);
 		//panel.add(new JLabel("hello world"+gender));
 		
-		
+
+		//build panel
+		panel = new CalendarPanel(entrylist);
 		
 		panel.setVisible(true);
 		return panel;
