@@ -20,6 +20,8 @@ import javax.swing.BoxLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * This Panel shows CalendarEntry Items
@@ -41,7 +43,7 @@ public class CalendarPanel extends JPanel {
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.CENTER);
 		
-		//List model
+		//Add entries to list model
 		DefaultListModel<CalendarEntry> model = new DefaultListModel<CalendarEntry>();
 		for(CalendarEntry entry : entrylist){
 			model.addElement(entry);
@@ -49,18 +51,18 @@ public class CalendarPanel extends JPanel {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{105, 71, 108, 6, 108, 42, 0};
+		gbl_panel.columnWidths = new int[]{171, 22, 108, 6, 108, 42, 0};
 		gbl_panel.rowHeights = new int[]{133, 23, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 			
 			JTextPane txtpnAllDates = new JTextPane();
 			txtpnAllDates.setText("All Dates");
 			txtpnAllDates.setEditable(false);
 			GridBagConstraints gbc_txtpnAllDates = new GridBagConstraints();
+			gbc_txtpnAllDates.anchor = GridBagConstraints.BELOW_BASELINE;
 			gbc_txtpnAllDates.gridwidth = 2;
-			gbc_txtpnAllDates.fill = GridBagConstraints.VERTICAL;
 			gbc_txtpnAllDates.insets = new Insets(0, 0, 5, 5);
 			gbc_txtpnAllDates.gridx = 0;
 			gbc_txtpnAllDates.gridy = 0;
@@ -83,7 +85,7 @@ public class CalendarPanel extends JPanel {
 		//		list.		}
 			//panel.add(list);
 			
-			JRadioButton rdbtnSingleDate = new JRadioButton("single date");
+		final	JRadioButton rdbtnSingleDate = new JRadioButton("single date");
 			GridBagConstraints gbc_rdbtnSingleDate = new GridBagConstraints();
 			gbc_rdbtnSingleDate.gridwidth = 2;
 			gbc_rdbtnSingleDate.anchor = GridBagConstraints.WEST;
@@ -92,7 +94,7 @@ public class CalendarPanel extends JPanel {
 			gbc_rdbtnSingleDate.gridy = 1;
 			panel.add(rdbtnSingleDate, gbc_rdbtnSingleDate);
 		
-		JRadioButton rdbtnPeriod = new JRadioButton("Period");
+		final JRadioButton rdbtnPeriod = new JRadioButton("Period");
 		GridBagConstraints gbc_rdbtnPeriod = new GridBagConstraints();
 		gbc_rdbtnPeriod.gridwidth = 2;
 		gbc_rdbtnPeriod.anchor = GridBagConstraints.WEST;
@@ -101,7 +103,8 @@ public class CalendarPanel extends JPanel {
 		gbc_rdbtnPeriod.gridy = 2;
 		panel.add(rdbtnPeriod, gbc_rdbtnPeriod);
 		
-		JRadioButton rdbtnAll = new JRadioButton("All");
+		final JRadioButton rdbtnAll = new JRadioButton("All");
+		rdbtnAll.setSelected(true);
 		GridBagConstraints gbc_rdbtnAll = new GridBagConstraints();
 		gbc_rdbtnAll.gridwidth = 2;
 		gbc_rdbtnAll.insets = new Insets(0, 0, 0, 5);
@@ -109,5 +112,44 @@ public class CalendarPanel extends JPanel {
 		gbc_rdbtnAll.gridx = 0;
 		gbc_rdbtnAll.gridy = 3;
 		panel.add(rdbtnAll, gbc_rdbtnAll);
+		
+		ActionListener singleListener = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+				rdbtnAll.setSelected(false);
+				rdbtnPeriod.setSelected(false);
+				
+				//update()
+				
+			}			
+		};
+		rdbtnSingleDate.addActionListener(singleListener);
+		
+		ActionListener allListener = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+				rdbtnSingleDate.setSelected(false);
+				rdbtnPeriod.setSelected(false);
+				
+				//update()
+				
+			}			
+		};
+		rdbtnAll.addActionListener(allListener);
+		
+		ActionListener periodListener = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+				rdbtnAll.setSelected(false);
+				rdbtnSingleDate.setSelected(false);
+				
+				//update()
+				
+			}			
+		};		
+		rdbtnPeriod.addActionListener(periodListener);
 	}
 }

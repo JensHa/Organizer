@@ -57,7 +57,7 @@ public class Overview extends JFrame {
 		uri = builder.build();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 470, 321);
+		setBounds(100, 100, 545, 321);
 		contentPane = new JPanel();
 		contentPane.addComponentListener(new ComponentAdapter() {
 			@Override
