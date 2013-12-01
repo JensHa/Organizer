@@ -2,11 +2,14 @@ package de.client.gui.calendar;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -14,14 +17,18 @@ import javax.swing.SpringLayout;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
+import org.freixas.jcalendar.*;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
+
+import java.awt.Container;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 /**
  * This Panel shows CalendarEntry Items
@@ -57,8 +64,8 @@ public class CalendarPanel extends JPanel {
 		gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 			
-			JTextPane txtpnAllDates = new JTextPane();
-			txtpnAllDates.setText("All Dates");
+			final JTextPane txtpnAllDates = new JTextPane();
+			txtpnAllDates.setText("Show all entries");
 			txtpnAllDates.setEditable(false);
 			GridBagConstraints gbc_txtpnAllDates = new GridBagConstraints();
 			gbc_txtpnAllDates.anchor = GridBagConstraints.BELOW_BASELINE;
@@ -68,7 +75,7 @@ public class CalendarPanel extends JPanel {
 			gbc_txtpnAllDates.gridy = 0;
 			panel.add(txtpnAllDates, gbc_txtpnAllDates);
 			
-			JList list = new JList(model);
+			JList<CalendarEntry> list = new JList<CalendarEntry>(model);
 			//	scrollPane.add(list);
 				GridBagConstraints gbc_list = new GridBagConstraints();
 				gbc_list.gridwidth = 3;
@@ -120,9 +127,12 @@ public class CalendarPanel extends JPanel {
 				rdbtnAll.setSelected(false);
 				rdbtnPeriod.setSelected(false);
 				
-				//update()
+				Date date = selectDateDialog();
+				System.out.println("SELECTED: "+date);
+				txtpnAllDates.setText("Show entries for: " + date);
 				
-			}			
+			}
+		
 		};
 		rdbtnSingleDate.addActionListener(singleListener);
 		
@@ -133,8 +143,9 @@ public class CalendarPanel extends JPanel {
 				rdbtnSingleDate.setSelected(false);
 				rdbtnPeriod.setSelected(false);
 				
-				//update()
-				
+				Date date = selectDateDialog();
+				System.out.println("SELECTED: "+date);
+				txtpnAllDates.setText("Show all entries");
 			}			
 		};
 		rdbtnAll.addActionListener(allListener);
@@ -146,10 +157,21 @@ public class CalendarPanel extends JPanel {
 				rdbtnAll.setSelected(false);
 				rdbtnSingleDate.setSelected(false);
 				
-				//update()
+				Date date = selectDateDialog();
+				System.out.println("SELECTED: "+date);
+				txtpnAllDates.setText("Show entries from: " + date + " to: ");
 				
 			}			
 		};		
 		rdbtnPeriod.addActionListener(periodListener);
+	}
+	
+	private Date selectDateDialog() {
+		System.out.println("in dialog");
+		CalendarDialog cal = new CalendarDialog();
+		cal.startCalendarDialog();
+		Date date = cal.getDate();
+		System.out.println("will return" + date);
+		return date;
 	}
 }

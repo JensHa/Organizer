@@ -22,7 +22,7 @@ public class GoogleCalendarEntryFeed {
 		//Get the head (feed)
 		JSONObject result = jsonfeed.getJSONObject("feed");
 
-		System.out.println("AFTER GET FEED: "+result.toString(4));
+		//System.out.println("AFTER GET FEED: "+result.toString(4));
 		//Get all contact-entries (people).... is there more than one entry?=> array ... if not then Object
 		if(result.get("entry").getClass().toString().equals("class org.codehaus.jettison.json.JSONArray"))
 		{

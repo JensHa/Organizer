@@ -8,5 +8,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/google_oauth"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jersey17"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JCalendar"/>
+	<classpathentry kind="lib" path="/home/adrian/Downloads/jcalendar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

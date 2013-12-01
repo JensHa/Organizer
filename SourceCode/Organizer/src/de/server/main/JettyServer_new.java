@@ -27,6 +27,7 @@ public class JettyServer_new {
 	 * @param port the port to listen on
 	 */
 	public JettyServer_new( int port ) {
+		System.out.println("THATS A TEST OUTPUT");
 		server = new Server(port);
 		servletHolder = new ServletHolder(ServletContainer.class);
 	}
