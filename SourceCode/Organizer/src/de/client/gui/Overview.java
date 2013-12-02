@@ -78,7 +78,7 @@ public class Overview extends JFrame {
 		tabbedPane.addTab("Contacts", new ContactGUI(username,password,client,uri));
 //		tabbedPane.addTab("test", new JPanel());
 //		Add the Calendar tabb
-		JPanel calendar = CalendarGui.createPanel(username, password);
+		JPanel calendar = CalendarGui.createPanel(this,username, password);
 		tabbedPane.addTab("Calendar", calendar);
 
 		contentPane.add(tabbedPane);

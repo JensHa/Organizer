@@ -16,22 +16,25 @@ import org.freixas.jcalendar.*;
  * @author adrian
  */
 
-public class CalendarDialog extends JDialog
+public class DoubleCalendarDialog extends JDialog
 {
 	
-	private static Date date = new Date();
-	private static JLabel selected = new JLabel();
+	private static Date[] date = new Date[2];
+	private static JTextArea selected = new JTextArea();
 	private JButton okb = new JButton("Ok");
-	private boolean pressedbutton = false;
-
-//	public CalendarDialog(){}
+    private JCalendar calendar1;
+    private JCalendar calendar2;
+    private Boolean[] pressed = {false,false};
+	
 	/**
-	 * Opens a Dialog to choose a date and returns the selected Date.
+	 * Opens a Dialog to choose two dates
 	 * @param parent the parent frame, which gets inactive if the dialog isnt finished
 	 * @author adrian
 	 */
-	public  CalendarDialog(JFrame parent, String title, Boolean is_modal){
+	public  DoubleCalendarDialog(JFrame parent, String title, Boolean is_modal){
 		super(parent,title,is_modal);
+		
+		selected.setEditable(false);
 		// Set up the frame
 		setTitle("CalendarChooser");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -48,12 +51,12 @@ public class CalendarDialog extends JDialog
 		// Create a date listener to be used for all calendars
 
 		MyDateListener listener = new MyDateListener();
+		MyDateListener listener2 = new MyDateListener();
 
 		// Display date and time using the default calendar and locale.
 		// Display today's date at the bottom.
 
-		JCalendar calendar1 =
-				new JCalendar(
+		calendar1 =	new JCalendar(
 						JCalendar.DISPLAY_DATE | JCalendar.DISPLAY_TIME,
 						true);
 		calendar1.addDateListener(listener);
@@ -66,6 +69,23 @@ public class CalendarDialog extends JDialog
 		calendar1.setDayFont(new Font("SansSerif", Font.BOLD, 16));
 		calendar1.setTimeFont(new Font("DialogInput", Font.PLAIN, 10));
 		calendar1.setTodayFont(new Font("Dialog", Font.PLAIN, 14));
+		
+		//Calendar 2
+
+
+		 calendar2 =new JCalendar(
+						JCalendar.DISPLAY_DATE | JCalendar.DISPLAY_TIME,
+						true);
+		calendar2.addDateListener(listener2);
+		calendar2.setBorder(compoundBorder);
+
+		// Set fonts rather than using defaults
+
+		calendar2.setTitleFont(new Font("Serif", Font.BOLD|Font.ITALIC, 24));
+		calendar2.setDayOfWeekFont(new Font("SansSerif", Font.ITALIC, 12));
+		calendar2.setDayFont(new Font("SansSerif", Font.BOLD, 16));
+		calendar2.setTimeFont(new Font("DialogInput", Font.PLAIN, 10));
+		calendar2.setTodayFont(new Font("Dialog", Font.PLAIN, 14));
 
 		// Display date only
 		//Ok button
@@ -74,7 +94,6 @@ public class CalendarDialog extends JDialog
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				pressedbutton = true;
 				dispose();
 				
 			}
@@ -82,7 +101,8 @@ public class CalendarDialog extends JDialog
 		// Add all the calendars to the content pane
 
 		JPanel panel1 = new JPanel(new BorderLayout());
-		panel1.add(calendar1);
+		panel1.add(calendar1, BorderLayout.BEFORE_FIRST_LINE);
+		panel1.add(calendar2);
 		JPanel panel2 = new JPanel(new BorderLayout());
 		panel2.add(okb, BorderLayout.BEFORE_FIRST_LINE);
 		panel2.add(selected);
@@ -104,8 +124,16 @@ public class CalendarDialog extends JDialog
 		{
 			Calendar c = e.getSelectedDate();
 			if (c != null) {
-				date = e.getSelectedDate().getTime();
-				selected.setText("Selected Date: " + date.toString());
+				if (e.getSource()==calendar1){
+					date[0] = e.getSelectedDate().getTime();
+					pressed[0] = true;
+				}
+				else if (e.getSource()==calendar2){
+					date[1] = e.getSelectedDate().getTime();
+					pressed[1] = true;
+				}
+				selected.setText("From:"+"\t" + date[0]+ "\nto:\t" + date[1]);
+				if(pressed[0] && pressed[1])
 				okb.setEnabled(true);
 			}
 		}
@@ -115,7 +143,7 @@ public class CalendarDialog extends JDialog
 	* gives the selected date.
 	 * @return selected Date object.
 	 */
-	public Date getDate(){
+	public Date[] getDate(){
 
 		return date;
 	}

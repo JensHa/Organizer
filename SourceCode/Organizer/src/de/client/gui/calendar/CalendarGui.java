@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.ws.rs.core.MediaType;
@@ -37,7 +38,7 @@ public class CalendarGui{// extends JPanel {
 	 * @param pass the password of the session
 	 * @author adrian
 	 */
-	public static JPanel createPanel(String username,String pass){
+	public static JPanel createPanel(JFrame parent, String username,String pass){
 		
 		ArrayList<CalendarEntry> entrylist = new ArrayList<CalendarEntry>();
 		
@@ -81,7 +82,7 @@ public class CalendarGui{// extends JPanel {
 		
 
 		//build panel
-		panel = new CalendarPanel(entrylist);
+		panel = new CalendarPanel(parent,entrylist);
 		
 		panel.setVisible(true);
 		return panel;
