@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -145,6 +146,12 @@ public class GetCredential extends JFrame {
 				setVisible(false);
 				login.toFront();
 				login.setLabel("You can now login");
+				}else
+				{
+					JOptionPane.showMessageDialog(null,
+						    "Please enter a valid code!",
+						    "Wrong Code",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 				res=null;
 				resp=null;
