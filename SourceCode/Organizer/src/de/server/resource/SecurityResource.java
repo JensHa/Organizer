@@ -41,7 +41,7 @@ public class SecurityResource {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/CreateAuthURL")
-	public String getSome()
+	public String createAuthURL()
 	{
 		System.out.println("##Server##: A AuthUrl will be generated");
 		String result="";
@@ -55,7 +55,7 @@ public class SecurityResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/CreateCredentials")
-	public Response postItemXML(@Context HttpServletRequest request, JSONArray usernameAndPass)
+	public Response createCredentials(@Context HttpServletRequest request, JSONArray usernameAndPass)
 	{
 		int pos=0;
 		String validCred="false";
@@ -185,32 +185,6 @@ public class SecurityResource {
 		
 		Response response = Response.ok(userCreated).build();
 		return response;
-	}
-	
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/SetSessionID")
-	public Response setASessionID(JSONArray nameAndID)
-	{
-		try
-		{
-			for(int i=0;i<userCredentials.size();i++)
-			{
-				if(nameAndID.getString(0).equals(userCredentials.get(i)[0]))
-				{
-				    SecureRandom sr1 = new SecureRandom();
-				    userCredentials.get(i)[3]=nameAndID.getString(1)+"/"+sr1.nextInt();
-				    
-					Response response = Response.ok(userCredentials.get(i)[3]).build();
-					return response;
-				}
-			}
-			
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 
