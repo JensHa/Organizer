@@ -127,6 +127,7 @@ public class Login extends JFrame {
 			    JSONArray userData = new JSONArray();
 			    userData.put(textField.getText());
 			    userData.put(new String(passwordField.getPassword()));
+			    System.out.println(userData.toString());
 
 
 				
@@ -134,27 +135,22 @@ public class Login extends JFrame {
 				//Status: Password/Username incorrect - No valid credentials
 				String status=resp.getEntity(String.class);
 				switch (status) {
+				
+				//Combination of "username" and "password" does not exist
 				case "false;false":
 					lblNewLabel.setText("Wrong Username or Password");
 					break;
-					
+				
+				//Combination of "username" and "password" exists, but no valid credentials	
 				case "true;false":
 					lblNewLabel.setText("You have no valid credentials. Please verify yourself!");
 					GetCredential getCredential=new GetCredential(textField.getText(),frame);
 					getCredential.setVisible(true);
 					break;
 				
+				//Everything is fine!	
 				case "true;true":
 					
-//					res=client.resource(uri).path("Security").path("SetSessionID");
-//					
-//				    JSONArray usernameAndID = new JSONArray();
-//				    usernameAndID.put(textField.getText());
-//				    SecureRandom sr1 = new SecureRandom();
-//				    usernameAndID.put(sr1.nextInt());
-//				    
-//					resp = res.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,usernameAndID);
-//					String sessionID=resp.getEntity(String.class);
 		
 					//TODO: Another method? To close it complete
 					setVisible(false);

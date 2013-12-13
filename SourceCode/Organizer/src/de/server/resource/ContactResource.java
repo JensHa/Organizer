@@ -194,7 +194,8 @@ public class ContactResource {
 						  }
 						  
 						  URL postUrl = new URL("https://www.google.com/m8/feeds/contacts/"+userCredentials.get(i)[2]+"/full");
-						  ContactsService conserv= new ContactsService("Project Default Service Account");
+						 // ContactsService conserv= new ContactsService("Project Default Service Account");
+						  ContactsService conserv= new ContactsService("Organizer");
 				          conserv.setOAuth2Credentials((Credential) userCredentials.get(0)[3]);
 			
 						  ContactEntry createdContact = conserv.insert(postUrl, contact);
