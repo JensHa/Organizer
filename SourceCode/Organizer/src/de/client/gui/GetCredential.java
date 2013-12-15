@@ -29,6 +29,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import de.client.ClientAuthProperties;
 import de.server.oauth.AuthHelper;
 
 public class GetCredential extends JFrame {
@@ -45,7 +46,7 @@ public class GetCredential extends JFrame {
 	private JLabel lblNewLabel;
 	
 	private Client client;
-	private String serverURI="http://localhost/";
+	private String serverURI=ClientAuthProperties.ServerURI;
 	private int port=8080;
 	private UriBuilder builder;
 	private URI uri;
@@ -58,6 +59,7 @@ public class GetCredential extends JFrame {
 //	public static void main(String[] args) {
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
+//			test
 //				try {
 //					GetCredential frame = new GetCredential();
 //					frame.setVisible(true);
